@@ -24,6 +24,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.swing.JInternalFrame;
+
 import com.jaamsim.Commands.KeywordCommand;
 import com.jaamsim.Graphics.DisplayEntity;
 import com.jaamsim.Graphics.Region;
@@ -202,9 +204,9 @@ public class View extends Entity {
 	private static class WindowSizePosUpdater implements Runnable {
 		private final IntegerVector pos;
 		private final IntegerVector size;
-		private final Frame window;
+		private final JInternalFrame window;
 
-		public WindowSizePosUpdater(Frame w, IntegerVector p, IntegerVector s) {
+		public WindowSizePosUpdater(JInternalFrame w, IntegerVector p, IntegerVector s) {
 			window = w;
 			pos = p;
 			size = s;
@@ -241,13 +243,13 @@ public class View extends Entity {
 		super.updateForInput( in );
 
 		if (in == windowPos) {
-			final Frame window = RenderManager.getOpenWindowForView(this);
+			final JInternalFrame window = RenderManager.getOpenWindowForView(this);
 			if (window != null)
 				new WindowSizePosUpdater(window, windowPos.getValue(), null).doUpdate();
 			return;
 		}
 		if (in == windowSize) {
-			final Frame window = RenderManager.getOpenWindowForView(this);
+			final JInternalFrame window = RenderManager.getOpenWindowForView(this);
 			if (window != null)
 				new WindowSizePosUpdater(window, null, windowSize.getValue()).doUpdate();
 			return;

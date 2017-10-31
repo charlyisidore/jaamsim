@@ -20,6 +20,9 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.util.ArrayList;
 
+import javax.swing.JInternalFrame;
+import javax.swing.ImageIcon;
+
 import com.jogamp.opengl.GLCapabilitiesImmutable;
 import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLEventListener;
@@ -29,7 +32,7 @@ import com.jogamp.newt.opengl.GLWindow;
 
 public class RenderWindow {
 
-	private Frame _awtFrame;
+	private JInternalFrame _awtFrame;
 	private final GLWindow _window;
 	private int _windowID;
 	private int _viewID;
@@ -54,13 +57,17 @@ public class RenderWindow {
 		_window.addGLEventListener(glListener);
 		_window.setSharedContext(sharedContext);
 
-		_awtFrame = new Frame(title);
+		_awtFrame = new JInternalFrame(title);
+		_awtFrame.setResizable(true);
+		_awtFrame.setClosable(true);
+		_awtFrame.setMaximizable(true);
+		_awtFrame.setIconifiable(true);
 		NewtCanvasAWT canvas = new NewtCanvasAWT(_window);
 		_awtFrame.add(canvas);
 		_awtFrame.setBounds(x, y, width, height);
 
 		if (icon != null) {
-			_awtFrame.setIconImage(icon);
+			_awtFrame.setFrameIcon(new ImageIcon(icon));
 		}
 
 		_appListener = appListener;
@@ -76,7 +83,7 @@ public class RenderWindow {
 		return _window;
 	}
 
-	public Frame getAWTFrameRef() {
+	public JInternalFrame getAWTFrameRef() {
 		return _awtFrame;
 	}
 

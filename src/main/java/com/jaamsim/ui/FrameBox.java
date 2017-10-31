@@ -22,6 +22,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+import javax.swing.JInternalFrame;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
@@ -34,7 +37,7 @@ import com.jaamsim.controllers.RenderManager;
 import com.jaamsim.input.InputAgent;
 import com.jaamsim.input.KeywordIndex;
 
-public class FrameBox extends OSFixJFrame {
+public class FrameBox extends JInternalFrame {
 
 	private static final ArrayList<FrameBox> allInstances;
 
@@ -55,8 +58,10 @@ public class FrameBox extends OSFixJFrame {
 
 	public FrameBox(String title) {
 		super(title);
-		setType(Type.UTILITY);
-		setAutoRequestFocus(false);
+		setResizable(true);
+		setClosable(true);
+		setMaximizable(false);
+		setIconifiable(true);
 		allInstances.add(this);
 	}
 
@@ -76,7 +81,7 @@ public class FrameBox extends OSFixJFrame {
 
 	public void reset() {}
 
-	public static WindowAdapter getCloseListener(String key) {
+	public static InternalFrameAdapter getCloseListener(String key) {
 		return new CloseListener(key);
 	}
 
@@ -84,7 +89,7 @@ public class FrameBox extends OSFixJFrame {
 	 * Listens for window events for the GUI and sets the appropriate keyword
 	 * controlling visibility.
 	 */
-	private static class CloseListener extends WindowAdapter {
+	private static class CloseListener extends InternalFrameAdapter {
 		final KeywordIndex kw;
 		public CloseListener(String keyword) {
 			ArrayList<String> arg = new ArrayList<>(1);
@@ -93,7 +98,7 @@ public class FrameBox extends OSFixJFrame {
 		}
 
 		@Override
-		public void windowClosing(WindowEvent e) {
+		public void internalFrameClosing(InternalFrameEvent e) {
 			InputAgent.apply(Simulation.getInstance(), kw);
 		}
 	}

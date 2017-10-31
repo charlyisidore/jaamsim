@@ -99,7 +99,7 @@ public class EditBox extends FrameBox {
 	private EditBox() {
 		super( "Input Editor" );
 		setDefaultCloseOperation(FrameBox.DISPOSE_ON_CLOSE);
-		addWindowListener(FrameBox.getCloseListener("ShowInputEditor"));
+		addInternalFrameListener(FrameBox.getCloseListener("ShowInputEditor"));
 
 		// Set the preferred size of the panes
 		jTabbedFrame = new JTabbedPane();
@@ -615,7 +615,7 @@ implements ActionListener {
 		}
 
 		if(dialog == null) {
-			dialog = new JDialog(EditBox.getInstance(), "Select items",
+			dialog = new JDialog(GUIFrame.getInstance(), "Select items",
 					true); // model
 			dialog.setSize(190, 300);
 			jScroll = new JScrollPane(list);

@@ -47,7 +47,7 @@ public class PropertyBox extends FrameBox {
 	public PropertyBox() {
 		super("Property Viewer");
 		setDefaultCloseOperation(FrameBox.DISPOSE_ON_CLOSE);
-		addWindowListener(FrameBox.getCloseListener("ShowPropertyViewer"));
+		addInternalFrameListener(FrameBox.getCloseListener("ShowPropertyViewer"));
 
 		jTabbedFrame.addChangeListener(new TabListener());
 		getContentPane().add(jTabbedFrame);

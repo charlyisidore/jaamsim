@@ -48,11 +48,14 @@ import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -108,6 +111,8 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 	// global shutdown flag
 	static private AtomicBoolean shuttingDown;
 
+	private JDesktopPane desktopPane;
+
 	private JMenu fileMenu;
 	private JMenu viewMenu;
 	private JMenu windowMenu;
@@ -159,7 +164,8 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 	private static boolean SAFE_GRAPHICS;
 
 	// Collection of default window parameters
-	public static int DEFAULT_GUI_WIDTH = 1160;
+	public static int DEFAULT_GUI_WIDTH = 1260;
+	public static int DEFAULT_GUI_HEIGHT = 700;
 	public static int COL1_WIDTH;
 	public static int COL2_WIDTH;
 	public static int COL3_WIDTH;
@@ -210,7 +216,7 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 	private GUIFrame() {
 		super();
 
-		getContentPane().setLayout( new BorderLayout() );
+		getContentPane().setLayout( new BoxLayout(getContentPane(), BoxLayout.Y_AXIS) );
 		setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
 		this.addWindowListener(new CloseListener());
 
@@ -218,6 +224,10 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 		initializeMenus();
 		initializeButtonBar();
 		initializeMainToolBars();
+
+		// Initialize the internal windows area
+		desktopPane = new JDesktopPane();
+		getContentPane().add(desktopPane, BorderLayout.CENTER);
 
 		this.setIconImage(GUIFrame.getWindowIcon());
 
@@ -238,7 +248,8 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 	@Override
 	public Dimension getPreferredSize() {
 		Point fix = OSFix.getSizeAdustment();
-		return new Dimension(DEFAULT_GUI_WIDTH + fix.x, super.getPreferredSize().height);
+		Rectangle winSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		return new Dimension(winSize.width + fix.x, winSize.height);
 	}
 
 	public static synchronized GUIFrame getInstance() {
@@ -368,6 +379,13 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 		InputAgent.setPreDefinedEntityCount( Entity.getAll().get( Entity.getAll().size() - 1 ).getEntityNumber());
 
 		updateForUndo();
+	}
+
+	/**
+	 * Add an internal window to the JDesktopPane.
+	 */
+	public void addInternalFrame(JInternalFrame window) {
+		desktopPane.add(window);
 	}
 
 	/**
@@ -1775,8 +1793,7 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 	 * windows based on the size of the computer display being used.
 	 */
 	private void calcWindowDefaults() {
-		Dimension guiSize = this.getSize();
-		Rectangle winSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		Rectangle winSize = new Rectangle(0,0,desktopPane.getWidth(), desktopPane.getHeight()-40);
 
 		COL1_WIDTH = 220;
 		COL2_WIDTH = Math.min(520, (winSize.width - COL1_WIDTH) / 2);
@@ -1784,17 +1801,17 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 		VIEW_WIDTH = COL2_WIDTH + COL3_WIDTH;
 		COL4_WIDTH = 520;
 
-		COL1_START = this.getX();
+		COL1_START = winSize.x;
 		COL2_START = COL1_START + COL1_WIDTH;
 		COL3_START = COL2_START + COL2_WIDTH;
 		COL4_START = Math.min(COL3_START + COL3_WIDTH, winSize.width - COL4_WIDTH);
 
-		HALF_TOP = (winSize.height - guiSize.height) / 2;
-		HALF_BOTTOM = (winSize.height - guiSize.height - HALF_TOP);
-		LOWER_HEIGHT = (winSize.height - guiSize.height) / 3;
-		VIEW_HEIGHT = winSize.height - guiSize.height - LOWER_HEIGHT;
+		HALF_TOP = (winSize.height - winSize.y) / 2;
+		HALF_BOTTOM = (winSize.height - winSize.y - HALF_TOP);
+		LOWER_HEIGHT = (winSize.height - winSize.y) / 3;
+		VIEW_HEIGHT = winSize.height - winSize.y - LOWER_HEIGHT;
 
-		TOP_START = this.getY() + guiSize.height;
+		TOP_START = winSize.y;
 		BOTTOM_START = TOP_START + HALF_TOP;
 		LOWER_START = TOP_START + VIEW_HEIGHT;
 	}
@@ -1809,6 +1826,11 @@ public class GUIFrame extends OSFixJFrame implements EventTimeListener, EventErr
 			if (v.showWindow())
 				RenderManager.inst().createWindow(v);
 		}
+
+		getInstance().addInternalFrame(EntityPallet.getInstance());
+		getInstance().addInternalFrame(ObjectSelector.getInstance());
+		getInstance().addInternalFrame(EditBox.getInstance());
+		getInstance().addInternalFrame(OutputBox.getInstance());
 
 		// Set the initial state for the "Show Axes" check box
 		DisplayEntity ent = (DisplayEntity) Entity.getNamedEntity("XYZ-Axis");

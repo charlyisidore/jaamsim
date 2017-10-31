@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JInternalFrame;
 
 import com.jaamsim.Commands.DefineCommand;
 import com.jaamsim.Commands.KeywordCommand;
@@ -538,7 +539,7 @@ public class RenderManager implements DragSourceListener {
 				return;
 			}
 
-			final Frame awtFrame = renderer.getAWTFrame(windowID);
+			final JInternalFrame awtFrame = renderer.getAWTFrame(windowID);
 			if (awtFrame == null) {
 				return;
 			}
@@ -1618,7 +1619,7 @@ public class RenderManager implements DragSourceListener {
 		renderer.focusWindow(windowID);
 	}
 
-	public static Frame getOpenWindowForView(View view) {
+	public static JInternalFrame getOpenWindowForView(View view) {
 		if (!isGood()) return null;
 
 		RenderManager rman = RenderManager.inst();

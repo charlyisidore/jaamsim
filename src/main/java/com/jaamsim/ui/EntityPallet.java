@@ -29,7 +29,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
@@ -42,7 +42,7 @@ import javax.swing.tree.TreeSelectionModel;
 import com.jaamsim.basicsim.ObjectType;
 import com.jaamsim.controllers.RenderManager;
 
-public class EntityPallet extends OSFixJFrame implements DragGestureListener {
+public class EntityPallet extends JInternalFrame implements DragGestureListener {
 
 	private static EntityPallet myInstance;  // only one instance allowed to be open
 
@@ -55,11 +55,14 @@ public class EntityPallet extends OSFixJFrame implements DragGestureListener {
 	private EntityPallet() {
 
 		super( "Model Builder" );
-		setType(Type.UTILITY);
-		setAutoRequestFocus(false);
+		setResizable(true);
+		setClosable(true);
+		setMaximizable(false);
+		setIconifiable(true);
+
 		// Make the x button do the same as the close button
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(FrameBox.getCloseListener("ShowModelBuilder"));
+		setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+		addInternalFrameListener(FrameBox.getCloseListener("ShowModelBuilder"));
 
 		tree = new MyTree();
 		tree.setRootVisible(false);

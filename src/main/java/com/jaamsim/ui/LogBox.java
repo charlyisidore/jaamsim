@@ -37,7 +37,7 @@ public class LogBox extends FrameBox {
 	public LogBox() {
 		super( "Log Viewer" );
 		setDefaultCloseOperation(FrameBox.DISPOSE_ON_CLOSE);
-		addWindowListener(FrameBox.getCloseListener("ShowLogViewer"));
+		addInternalFrameListener(FrameBox.getCloseListener("ShowLogViewer"));
 
 		synchronized(logLock) {
 			logArea = new JTextArea(logBuilder.toString());

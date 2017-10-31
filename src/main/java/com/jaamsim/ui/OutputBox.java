@@ -42,7 +42,7 @@ public class OutputBox extends FrameBox {
 	public OutputBox() {
 		super( "Output Viewer" );
 		setDefaultCloseOperation(FrameBox.DISPOSE_ON_CLOSE);
-		addWindowListener(FrameBox.getCloseListener("ShowOutputViewer"));
+		addInternalFrameListener(FrameBox.getCloseListener("ShowOutputViewer"));
 
 		tableModel = new OutputTableModel();
 		OutputTable table = new OutputTable(tableModel);

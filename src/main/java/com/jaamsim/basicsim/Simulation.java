@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 
 import com.jaamsim.Samples.SampleConstant;
 import com.jaamsim.Samples.SampleInput;
@@ -925,6 +926,12 @@ public class Simulation extends Entity {
 	}
 
 	public static void setWindowVisible(JFrame f, boolean visible) {
+		f.setVisible(visible);
+		if (visible)
+			f.toFront();
+	}
+
+	public static void setWindowVisible(JInternalFrame f, boolean visible) {
 		f.setVisible(visible);
 		if (visible)
 			f.toFront();

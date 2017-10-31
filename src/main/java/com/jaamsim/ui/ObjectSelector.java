@@ -35,6 +35,8 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -68,8 +70,8 @@ public class ObjectSelector extends FrameBox {
 	public ObjectSelector() {
 		super( "Object Selector" );
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(FrameBox.getCloseListener("ShowObjectSelector"));
-		addWindowFocusListener(new MyFocusListener());
+		addInternalFrameListener(FrameBox.getCloseListener("ShowObjectSelector"));
+		addInternalFrameListener(new MyFocusListener());
 
 		top = new DefaultMutableTreeNode();
 		treeModel = new DefaultTreeModel(top);
@@ -524,12 +526,12 @@ public class ObjectSelector extends FrameBox {
 		public void keyTyped(KeyEvent e) {}
 	}
 
-	static class MyFocusListener implements WindowFocusListener {
+	static class MyFocusListener extends InternalFrameAdapter {
 		@Override
-		public void windowGainedFocus(WindowEvent arg0) {}
+		public void internalFrameActivated(InternalFrameEvent e) {}
 
 		@Override
-		public void windowLostFocus(WindowEvent e) {
+		public void internalFrameDeactivated(InternalFrameEvent e) {
 			// Complete any editing that has started
 			ObjectSelector.myInstance.tree.stopEditing();
 		}

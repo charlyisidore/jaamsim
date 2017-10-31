@@ -45,6 +45,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
+import javax.swing.JInternalFrame;
+
 import com.jaamsim.DisplayModels.DisplayModel;
 import com.jaamsim.MeshFiles.MeshData;
 import com.jaamsim.font.OverlayString;
@@ -56,6 +58,7 @@ import com.jaamsim.math.Ray;
 import com.jaamsim.math.Vec3d;
 import com.jaamsim.math.Vec4d;
 import com.jaamsim.render.util.ExceptionLogger;
+import com.jaamsim.ui.GUIFrame;
 import com.jaamsim.ui.LogBox;
 import com.jogamp.common.util.VersionNumber;
 import com.jogamp.nativewindow.NativeWindowFactory;
@@ -480,7 +483,7 @@ public class Renderer implements GLAnimatorControl {
 		}
 	}
 
-	public Frame getAWTFrame(int windowID) {
+	public JInternalFrame getAWTFrame(int windowID) {
 		synchronized(openWindows) {
 			RenderWindow win = openWindows.get(windowID);
 			if (win == null) {
@@ -491,10 +494,9 @@ public class Renderer implements GLAnimatorControl {
 	}
 
 	public void focusWindow(int windowID) {
-		final Frame awtRef = getAWTFrame(windowID);
+		final JInternalFrame awtRef = getAWTFrame(windowID);
 		if (awtRef == null)
 			return;
-		awtRef.setExtendedState(Frame.NORMAL);
 		awtRef.toFront();
 	}
 
@@ -534,12 +536,11 @@ public class Renderer implements GLAnimatorControl {
 		window.getAWTFrameRef().addComponentListener(wl);
 		window.getGLWindowRef().addMouseListener(new MouseHandler(window, message.listener));
 		window.getGLWindowRef().addKeyListener(message.listener);
-		window.getAWTFrameRef().setType(Type.UTILITY);
-		window.getAWTFrameRef().setAutoRequestFocus(false);
 
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				GUIFrame.getInstance().addInternalFrame(window.getAWTFrameRef());
 				window.getAWTFrameRef().setVisible(true);
 			}
 		});

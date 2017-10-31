@@ -93,7 +93,7 @@ public class EventViewer extends FrameBox implements EventTraceListener {
 	public EventViewer( EventManager em ) {
 		super("Event Viewer");
 		setDefaultCloseOperation( FrameBox.DISPOSE_ON_CLOSE );
-		addWindowListener(FrameBox.getCloseListener("ShowEventViewer"));
+		addInternalFrameListener(FrameBox.getCloseListener("ShowEventViewer"));
 
 		retiredEventDataList = new ArrayList<>();
 		eventDataList = new ArrayList<>();
