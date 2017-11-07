@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2017-12] - 2017-12-01
+## [2017-12.1] - 2017-12-07
+### Changed
+- Fix drag and drop shift in coordinates.
+
+## [2017-12.0] - 2017-12-01
 ### Added
 - This ChangeLog.
 - A shell script "jaamsim-linux.sh" to run JaamSim on Linux without crashing.

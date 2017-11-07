@@ -116,10 +116,10 @@ public class RenderWindow {
 	}
 
 	public synchronized int getViewableX() {
-		return _awtFrame.getBounds().x + _awtFrame.getInsets().left;
+		return _awtFrame.getContentPane().getLocationOnScreen().x;
 	}
 	public synchronized int getViewableY() {
-		return _awtFrame.getBounds().y + _awtFrame.getInsets().top;
+		return _awtFrame.getContentPane().getLocationOnScreen().y;
 	}
 
 	public synchronized int getWindowX() {
