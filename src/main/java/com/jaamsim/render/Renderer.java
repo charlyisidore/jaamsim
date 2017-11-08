@@ -46,6 +46,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 import javax.swing.JInternalFrame;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 import com.jaamsim.DisplayModels.DisplayModel;
 import com.jaamsim.MeshFiles.MeshData;
@@ -533,7 +535,7 @@ public class Renderer implements GLAnimatorControl {
 
 		GLWindowListener wl = new GLWindowListener(window.getWindowID());
 		window.getGLWindowRef().addWindowListener(wl);
-		window.getAWTFrameRef().addComponentListener(wl);
+		window.getAWTFrameRef().addInternalFrameListener(wl);
 		window.getGLWindowRef().addMouseListener(new MouseHandler(window, message.listener));
 		window.getGLWindowRef().addKeyListener(message.listener);
 
@@ -1052,7 +1054,7 @@ private void initCoreShaders(GL2GL3 gl, String version) throws RenderException {
 
 	}
 
-	private class GLWindowListener implements WindowListener, ComponentListener {
+	private class GLWindowListener extends InternalFrameAdapter implements WindowListener, ComponentListener {
 
 		private final int windowID;
 		public GLWindowListener(int id) {
@@ -1068,6 +1070,19 @@ private void initCoreShaders(GL2GL3 gl, String version) throws RenderException {
 				}
 
 				return w.getWindowListener();
+			}
+		}
+
+		@Override
+		public void internalFrameClosing(InternalFrameEvent we) {
+			windowCleanup(windowID);
+		}
+
+		@Override
+		public void internalFrameActivated(InternalFrameEvent arg0) {
+			WindowInteractionListener listener = getListener();
+			if (listener != null) {
+				listener.windowGainedFocus();
 			}
 		}
 
